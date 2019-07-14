@@ -2,13 +2,13 @@ FROM mcr.microsoft.com/dotnet/core/sdk:2.2-alpine AS build
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
-COPY HwDemo/*.csproj ./HwDemo/
+COPY ./src/HwDemo/*.csproj ./HwDemo/
 WORKDIR /app/HwDemo
 RUN dotnet restore
 
 # copy and publish app and libraries
 WORKDIR /app/
-COPY HwDemo/. ./HwDemo/
+COPY ./src/HwDemo/. ./HwDemo/
 WORKDIR /app/HwDemo
 RUN dotnet publish -c Release -o out
 
