@@ -1,0 +1,6 @@
+#!/bin/sh
+
+docker build \
+  -t mshgh/cicd/docker-build:1.0 \
+  -t mshgh/cicd/docker-build:latest \
+  .

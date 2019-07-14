@@ -1,0 +1,14 @@
+#!/bin/sh
+
+mkdir -p /home/git && \
+cd /home/git && \
+git clone --branch master --depth=1 https://github.com/mshgh/netcore-test-docker.git repo && \
+cd repo
+
+echo
+echo "Checking for prepared parameter files for docker build command..."
+for PARAMS_FILE in $(find . -name docker-build-params); do
+  echo
+  echo "Found: $PARAMS_FILE"
+  docker build $(cat $PARAMS_FILE | sed '/^#/ d' | sed 's/$/ /' | tr -d '\n')
+done
