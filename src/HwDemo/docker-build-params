@@ -1,0 +1,4 @@
+# some comment
+-t mshgh/dotnet/core/hwdemo:1.0
+-t mshgh/dotnet/core/hwdemo:latest
+src/HwDemo/
