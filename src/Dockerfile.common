@@ -17,6 +17,9 @@ RUN dotnet publish -c Release -o out
 #ENTRYPOINT ["dotnet", "test", "--logger:trx"]
 
 FROM mcr.microsoft.com/dotnet/core/runtime:2.2-alpine AS runtime
+ARG APPNAME
+#ENV APPBIN ${APPNAME}.dll
+
 WORKDIR /app
 COPY --from=build /app/out/ ./
-ENTRYPOINT ["dotnet", "HwDemo.dll"]
+ENTRYPOINT ["dotnet", "${APPNAME}"]
