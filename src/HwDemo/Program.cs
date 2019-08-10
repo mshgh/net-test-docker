@@ -6,7 +6,7 @@ namespace HwDemo
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World! ---updated---");
+            Console.WriteLine("Hello World! ---update #002---");
         }
     }
 }
