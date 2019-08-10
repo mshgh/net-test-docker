@@ -22,4 +22,4 @@ ARG APPNAME
 
 WORKDIR /app
 COPY --from=builder /app/out/ ./
-ENTRYPOINT [dotnet, HwDemo]
+ENTRYPOINT ["dotnet", "HwDemo"]
