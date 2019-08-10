@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2-alpine AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2-alpine AS builder
 
 # copy csproj and restore as distinct layers
 WORKDIR /app
@@ -11,15 +11,14 @@ COPY . .
 RUN dotnet publish -c Release -o out
 
 # test application -- see: dotnet-docker-unit-testing.md
-#FROM build AS testrunner
+#FROM builder AS testrunner
 #WORKDIR /app
 #COPY tests/. .
 #ENTRYPOINT ["dotnet", "test", "--logger:trx"]
 
 FROM mcr.microsoft.com/dotnet/core/runtime:2.2-alpine AS runtime
 ARG APPNAME
-#ENV APPBIN ${APPNAME}.dll
 
 WORKDIR /app
-COPY --from=build /app/out/ ./
+COPY --from=builder /app/out/ ./
 ENTRYPOINT ["dotnet", "${APPNAME}"]
