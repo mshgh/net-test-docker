@@ -18,8 +18,10 @@ RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/core/runtime:2.2-alpine AS runtime
 ARG APPNAME
-ENV APPNAME=${APPNAME}
 
 WORKDIR /app
-COPY --from=builder /app/out/ ./
+
+ENV APPNAME=${APPNAME}
 ENTRYPOINT dotnet ${APPNAME}.dll
+
+COPY --from=builder /app/out/ ./
