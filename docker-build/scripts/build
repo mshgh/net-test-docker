@@ -1,32 +1,37 @@
 #!/bin/sh
-
 mkdir -p /home/git && \
 cd /home/git && \
+rm -rf repo && \
 git clone --branch learning --depth=1 https://github.com/mshgh/netcore-test-docker.git repo && \
 cd repo
 
 echo
 echo "Checking repository for docker build parameter files..."
 for PARAMS_FILE in $(find . -name docker-build.env); do
+
+  _B_APP_PATH=$(dirname "$PARAMS_FILE")
+  _B_APP_NAME=${_B_APP_PATH##*/}
+
   echo
-  echo "Found: $PARAMS_FILE"
+  echo "Found: $_B_APP_PATH"
 
   . $PARAMS_FILE
 
   docker build \
     --target builder \
-    --cache-from $_B_DOCKER_IMAGE:builder \
-    --tag $_B_DOCKER_IMAGE:builder \
-    --file src/Dockerfile.common
-    .
+    --cache-from $_B_APP_IMAGE:builder \
+    --tag $_B_APP_IMAGE:builder \
+    --file src/Dockerfile.common \
+    $_B_APP_PATH
 
   docker build \
-    --cache-from $_B_DOCKER_IMAGE:builder \
-    --cache-from $_B_DOCKER_IMAGE:latest \
-    --tag $_B_DOCKER_IMAGE:$_B_APP_VERSION \
-    --tag $_B_DOCKER_IMAGE:latest \
-    --file src/Dockerfile.common
-    .
+    --cache-from $_B_APP_IMAGE:builder \
+    --cache-from $_B_APP_IMAGE:latest \
+    --tag $_B_APP_IMAGE:$_B_APP_VERSION \
+    --tag $_B_APP_IMAGE:latest \
+    --build-arg APPNAME=$_B_APP_NAME \
+    --file src/Dockerfile.common \
+    $_B_APP_PATH
 
-  //docker build $(cat $PARAMS_FILE | sed '/^#/ d' | sed 's/$/ /' | tr -d '\n')
+#docker build $(cat $PARAMS_FILE | sed '/^#/ d' | sed 's/$/ /' | tr -d '\n')
 done
