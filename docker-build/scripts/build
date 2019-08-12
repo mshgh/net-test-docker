@@ -7,15 +7,15 @@ cd repo
 
 echo
 echo "Checking repository for docker build parameter files..."
-for PARAMS_FILE in $(find . -name docker-build.env); do
+for PARAMS_FILE in $(find . -name docker-image); do
 
   _B_APP_PATH=$(dirname "$PARAMS_FILE")
   _B_APP_NAME=${_B_APP_PATH##*/}
+  _B_APP_IMAGE=$(cut -d ":" -f 1 "$PARAMS_FILE")
+  _B_APP_VERSION=$(cut -d ":" -f 2 "$PARAMS_FILE")
 
   echo
-  echo "Found: $_B_APP_PATH"
-
-  . $PARAMS_FILE
+  echo "Found: $_B_APP_PATH ($_B_APP_IMAGE:$_B_APP_VERSION)"
 
   docker build \
     --target builder \
@@ -33,5 +33,4 @@ for PARAMS_FILE in $(find . -name docker-build.env); do
     --file src/Dockerfile.common \
     $_B_APP_PATH
 
-#docker build $(cat $PARAMS_FILE | sed '/^#/ d' | sed 's/$/ /' | tr -d '\n')
 done
